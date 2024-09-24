@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sentence Speaking Bot</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="sentence">Press "Start" to begin.</div>
+  <button id="startButton" onclick="startGame()">Start</button>
+  <button id="speakButton" onclick="startRecognition()" disabled>Speak</button>
+  <div id="feedback"></div>
+
+  <script>
+    const sentences = [
+  "the sun is bright",
+  "i love ice cream",
+  "birds can fly",
+  "dogs are loyal",
+  "my cat is cute",
+  "i can run fast",
+  "i like to read books",
+  "the sky is blue",
+  "i am happy today",
+  "apples are red",
+  "my dad is funny",
+  "i have a big smile",
+  "my school is nice",
+  "the car is red",
+  "i like pizza",
+  "trees are tall",
+  "the dog is barking",
+  "i brush my teeth",
+  "i drink milk every day",
+  "the stars are shining",
+  "the moon is round",
+  "i can count to ten",
+  "i ride my bike",
+  "the cake is sweet",
+  "i play with my friends",
+  "the grass is green",
+  "i jump high",
+  "i like to draw pictures",
+  "my mom is kind",
+  "i have two eyes",
+  "i see a rainbow",
+  "i wear a red shirt",
+  "i can sing a song",
+  "the fish is swimming",
+  "i like the beach",
+  "i build a sandcastle",
+  "i love my family",
+  "i eat breakfast every day",
+  "the bird is singing",
+  "i can tie my shoes",
+  "i have a pet rabbit",
+  "my favorite color is blue",
+  "i see a butterfly",
+  "i read a story at night",
+  "i like chocolate cookies",
+  "i play soccer with my friends",
+  "i wash my hands before eating",
+  "i ride the bus to school",
+  "i write with a pencil",
+  "i eat vegetables every day",
+  "the snow is falling",
+  "i wear gloves in winter",
+  "my shoes are new",
+  "i water the plants",
+  "i feed my dog",
+  "i have a backpack",
+  "i draw with crayons",
+  "i love playing outside",
+  "i help my mom cook",
+  "i have a blue bicycle",
+  "i wear a hat in the sun",
+  "i like swimming in the pool",
+  "the frog is jumping",
+  "i play with my toys",
+  "the baby is sleeping",
+  "i love the sound of rain",
+  "i eat popcorn at the movies",
+  "i watch cartoons on tv",
+  "i wear a jacket when it's cold",
+  "i have a red ball",
+  "i play tag with my friends",
+  "i clean my room every day",
+  "the balloon is flying away",
+  "i build with blocks",
+  "i have a goldfish in a bowl",
+  "i like to color pictures",
+  "i hear the birds chirping",
+  "i open the door slowly",
+  "i hug my teddy bear",
+  "i eat a sandwich for lunch",
+  "i play in the sandbox",
+  "the wind is blowing",
+  "i read a book before bed",
+  "i smile when i'm happy",
+  "i see a bird's nest",
+  "i plant a seed in the soil",
+  "i see the clouds in the sky",
+  "i help set the table",
+  "i have a yellow raincoat",
+  "i see the stars at night",
+  "i give my friend a gift",
+  "i clap my hands to the music",
+  "i have a sticker collection",
+  "i paint with watercolors",
+  "i eat pancakes for breakfast",
+  "the flower is blooming",
+  "i blow out the candles on my cake",
+  "i wear a costume on halloween",
+  "i share my toys with my brother",
+  "i sleep with a blanket"
+];
+
+    
+    let currentSentence = "";
+    let sentenceIndex = 0;
+    
+    // Initialize Speech Recognition
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    function startGame() {
+      document.getElementById("feedback").innerText = "";
+      document.getElementById("speakButton").disabled = false;
+      nextSentence();
+    }
+
+    function nextSentence() {
+      if (sentenceIndex < sentences.length) {
+        currentSentence = sentences[sentenceIndex];
+        document.getElementById("sentence").innerText = currentSentence;
+        sentenceIndex++;
+      } else {
+        document.getElementById("sentence").innerText = "You've completed all sentences!";
+        document.getElementById("speakButton").disabled = true;
+      }
+    }
+
+    function startRecognition() {
+      document.getElementById("feedback").innerText = "Listening...";
+      recognition.start();
+    }
+
+    recognition.onresult = function(event) {
+      const spokenText = event.results[0][0].transcript.trim();
+      checkAnswer(spokenText);
+    };
+
+    recognition.onspeechend = function() {
+      recognition.stop();
+    };
+
+    recognition.onerror = function(event) {
+      document.getElementById("feedback").innerText = "Error occurred: " + event.error;
+    };
+
+    function checkAnswer(spokenText) {
+      if (spokenText === currentSentence) {
+        document.getElementById("feedback").innerText = "Correct!";
+      } else {
+        document.getElementById("feedback").innerText = `Wrong! You said: "${spokenText}"`;
+      }
+      setTimeout(() => {
+        document.getElementById("feedback").innerText = "";
+        nextSentence();
+      }, 2000);
+    }
+  </script>
+
+</body>
+</html>
